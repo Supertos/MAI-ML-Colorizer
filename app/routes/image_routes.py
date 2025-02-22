@@ -45,8 +45,17 @@ async def upload_image(
     file: UploadFile = File(...),
     grain: int = Form(...),
     sharpness: int = Form(...)
-):
-   return None
+):  
+    #принимаем картинку и параметры
+    image_bytes = await file.read()
+    result_async = process_image_task.apply(args=[image_bytes, grain, sharpness])
+    file_path = result_async.get()                  # дождались конца Celery задачи
+
+    if not file_path or not os.path.exists(file_path):
+        raise HTTPException(status_code=500, detail="Не удалось получить путь к обработанному файлу")
+
+    filename = os.path.basename(file_path)
+    return JSONResponse(content={"redirect_url": f"/static/processed/{filename}"})
 
 @router.get("/show/{filename}", response_class=HTMLResponse)
 def show_processed_image(filename: str):
