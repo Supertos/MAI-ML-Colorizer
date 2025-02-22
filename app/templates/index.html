@@ -1,0 +1,18 @@
+<!-- app/templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Загрузка изображения</title>
+</head>
+<body>
+    <h1>Загрузите изображение</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required/>
+        <input type="range" id="vol" name="vol" min="0" max="50">
+        <input type="range" id="vol" name="vol" min="0" max="50">
+       
+        <button type="submit">Загрузить</button>
+    </form>
+</body>
+</html>
