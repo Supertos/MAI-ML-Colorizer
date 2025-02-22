@@ -50,5 +50,19 @@ async def upload_image(
 
 @router.get("/show/{filename}", response_class=HTMLResponse)
 def show_processed_image(filename: str):
-    return None
+    #отображение страницы с готовым изображением, которое лежит в /static/processed/...
+    # проверка существования файла
+    full_path = os.path.join(PROCESSED_FOLDER, filename)
+    if not os.path.exists(full_path):
+        raise HTTPException(404, detail="Файл не найден")
 
+    # возращаем простой HTML с <img> на него:
+    return f"""
+    <html>
+      <head><title>Результат обработки</title></head>
+      <body>
+        <h1>Готовая картинка</h1>
+        <img src="/static/processed/{filename}" alt="результат">
+      </body>
+    </html>
+    """
