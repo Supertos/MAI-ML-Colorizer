@@ -4,10 +4,6 @@ from app.routes.image_routes import router as image_router
 from fastapi.middleware.cors import CORSMiddleware
 
 def create_app() -> FastAPI:
-    """
-    Функция для создания приложения,
-    чтобы в будущем при необходимости передавать настройки.
-    """
     app = FastAPI(title="Colorizer Project")
     app.add_middleware(
         CORSMiddleware,
