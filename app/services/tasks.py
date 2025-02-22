@@ -16,4 +16,10 @@ os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 @celery_app.task
 def process_image_task(*args) -> str:
     #инвертируем картинку
-    return None
+    image_bytes = args[0]
+    with Image.open(io.BytesIO(image_bytes)) as img:
+        inverted = ImageOps.invert(img.convert("RGB"))
+        filename = f"{uuid.uuid4().hex}.png"
+        file_path = os.path.join(PROCESSED_FOLDER, filename)
+        inverted.save(file_path, "PNG")
+    return file_path
