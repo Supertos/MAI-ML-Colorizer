@@ -9,7 +9,7 @@ Current version U-net
 ![3](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/3.png)
 ![4](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/4.png)
 ![5](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/download.png)
-![5](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/photo_2025-02-22_19-48-44.jpg)
+![5](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/photo_2025-02-22_19-48-44.jpg.png)
 ![6](https://github.com/Supertos/MAI-ML-Colorizer/blob/ml/ML_colorizer/ML/Examples/photo_2025-02-22_19-51-39.jpg)
 
 # Model architecure:
