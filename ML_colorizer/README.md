@@ -13,4 +13,4 @@ Current version U-net
 ![6](examples/7.jpg)
 
 # Model architecure:
-![architecure](architecture.png)
+![architecture](architecture.png)
