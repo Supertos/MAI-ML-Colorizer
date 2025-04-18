@@ -7,10 +7,12 @@ from typing import Tuple
 
 class Colorizer(Model):
 
-    def __init__(self,
-                 input_shape: Tuple[int, int, int] = (128, 128, 1),
-                 L1=0.0,
-                 L2=0.0):
+    def __init__(
+            self,
+            input_shape: Tuple[int, int, int] = (128, 128, 1),
+            L1=0.0,
+            L2=0.0):
+
         super().__init__()
         self._l1 = L1
         self._l2 = L2
@@ -41,21 +43,17 @@ class Colorizer(Model):
             kernel_initializer=GlorotNormal()
         )
 
-        return self
-
-    def _encoder_block(self,
-                       filters: int,
-                       kernel_size: Tuple[int, int],
-                       apply_batch_norm=True):
+    def _encoder_block(
+            self,
+            filters: int,
+            kernel_size: Tuple[int, int],
+            apply_batch_norm=True):
 
         block = Sequential()
-        block.add(layers.Conv2D(filters,
-                                kernel_size,
-                                padding='same',
-                                strides=2,
-                                kernel_regularizer=reg_L1L2(
-                                    l1=self._l1,
-                                    l2=self._l2)))
+        block.add(layers.Conv2D(
+            filters, kernel_size,
+            padding='same', strides=2,
+            kernel_regularizer=reg_L1L2(l1=self._l1, l2=self._l2)))
 
         if apply_batch_norm:
             block.add(layers.BatchNormalization())
@@ -63,20 +61,18 @@ class Colorizer(Model):
         block.add(layers.LeakyReLU())
         return block
 
-    def _decoder_block(self,
-                       filters: int,
-                       kernel_size: Tuple[int, int],
-                       apply_dropout=False,
-                       dropout_rate=0.5):
+    def _decoder_block(
+            self,
+            filters: int,
+            kernel_size: Tuple[int, int],
+            apply_dropout=False,
+            dropout_rate=0.5):
 
         block = Sequential()
-        block.add(layers.Conv2DTranspose(filters,
-                                         kernel_size,
-                                         padding='same',
-                                         strides=2,
-                                         kernel_regularizer=reg_L1L2(
-                                             l1=self._l1,
-                                             l2=self._l2)))
+        block.add(layers.Conv2DTranspose(
+            filters, kernel_size,
+            padding='same', strides=2,
+            kernel_regularizer=reg_L1L2(l1=self._l1, l2=self._l2)))
 
         if apply_dropout:
             block.add(layers.Dropout(dropout_rate))
