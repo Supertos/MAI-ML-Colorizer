@@ -18,22 +18,21 @@ class Colorizer(Model):
         self._l2 = L2
         self._shape = input_shape
 
-        self.enc_1 = self._encoder_block(128, (3, 3), False)
-        self.enc_2 = self._encoder_block(128, (3, 3), False)
-        self.enc_3 = self._encoder_block(256, (3, 3), True)
-        self.enc_4 = self._encoder_block(512, (3, 3), True)
-        self.enc_5 = self._encoder_block(1024, (3, 3), True)
-        self.enc_6 = self._encoder_block(2048, (3, 3), True)
+        self.enc_1 = self._encoder_block(128, (3, 3), True)  # 64
+        self.enc_2 = self._encoder_block(128, (3, 3), True)  # 32
+        self.enc_3 = self._encoder_block(256, (3, 3), True)  # 16
+        self.enc_4 = self._encoder_block(512, (3, 3), True)  # 8
+        self.enc_5 = self._encoder_block(1024, (3, 3), True)  # 4
+        self.enc_6 = self._encoder_block(2048, (3, 3), True)  # 2
+        self.enc_7 = self._encoder_block(2048, (3, 3), True)  # 1
 
-        self.latent = self._encoder_block(2048, (3, 3), True)
-
-        self.dec_6 = self._decoder_block(2048, (3, 3), False)
-        self.dec_5 = self._decoder_block(1024, (3, 3), False)
-        self.dec_4 = self._decoder_block(512, (3, 3), False)
-        self.dec_3 = self._decoder_block(256, (3, 3), False)
-        self.dec_2 = self._decoder_block(128, (3, 3), False)
-        self.dec_1 = self._decoder_block(128, (3, 3), False)
-        self.dec_out = self._decoder_block(2, (3, 3), False)
+        self.dec_7 = self._decoder_block(2048, (3, 3), False)  # 2
+        self.dec_6 = self._decoder_block(1024, (3, 3), False)  # 4
+        self.dec_5 = self._decoder_block(512, (3, 3), False)  # 8
+        self.dec_4 = self._decoder_block(256, (3, 3), False)  # 16
+        self.dec_3 = self._decoder_block(128, (3, 3), False)  # 32
+        self.dec_2 = self._decoder_block(128, (3, 3), False)  # 64
+        self.dec_1 = self._decoder_block(2, (3, 3), False)  # 128
 
         self.final_conv = layers.Conv2D(
             2, (3, 3),
@@ -65,7 +64,7 @@ class Colorizer(Model):
             self,
             filters: int,
             kernel_size: Tuple[int, int],
-            apply_dropout=False,
+            apply_dropout=True,
             dropout_rate=0.5):
 
         block = Sequential()
@@ -87,31 +86,30 @@ class Colorizer(Model):
         x4 = self.enc_4(x3)
         x5 = self.enc_5(x4)
         x6 = self.enc_6(x5)
+        x7 = self.enc_7(x6)
 
-        latent = self.latent(x6)
+        y7 = self.dec_7(x7)
+        y7 = layers.concatenate([y7, x6], axis=-1)
 
-        y6 = self.dec_6(latent)
-        y6 = layers.concatenate([y6, x6], axis=-1)
+        y6 = self.dec_6(y7)
+        y6 = layers.concatenate([y6, x5], axis=-1)
 
         y5 = self.dec_5(y6)
-        y5 = layers.concatenate([y5, x5], axis=-1)
+        y5 = layers.concatenate([y5, x4], axis=-1)
 
         y4 = self.dec_4(y5)
-        y4 = layers.concatenate([y4, x4], axis=-1)
+        y4 = layers.concatenate([y4, x3], axis=-1)
 
         y3 = self.dec_3(y4)
-        y3 = layers.concatenate([y3, x3], axis=-1)
+        y3 = layers.concatenate([y3, x2], axis=-1)
 
         y2 = self.dec_2(y3)
-        y2 = layers.concatenate([y2, x2], axis=-1)
+        y2 = layers.concatenate([y2, x1], axis=-1)
 
         y1 = self.dec_1(y2)
-        y1 = layers.concatenate([y1, x1], axis=-1)
+        y1 = layers.concatenate([y1, inputs], axis=-1)
 
-        out = self.dec_out(y1)
-        out = layers.concatenate([out, inputs], axis=-1)
-
-        return self.final_conv(out)
+        return self.final_conv(y1)
 
     def model(self):
         x = layers.Input(shape=self._shape)
