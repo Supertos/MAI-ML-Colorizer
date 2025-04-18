@@ -5,7 +5,7 @@ from keras.src.initializers import GlorotNormal
 from tensorflow import random, exp, shape
 
 
-class Sampling(layers.Layer):
+class SamplingColorizer(layers.Layer):
     def call(self, inputs):
         z_mean, z_log_var = inputs
         epsilon = random.normal(shape=shape(z_mean))
@@ -180,7 +180,7 @@ class Colorizer(Model):
 
         self.encoder = EncoderColorizer(input_shape, L1, L2, z_dim)
 
-        self.sampling = Sampling()
+        self.sampling = SamplingColorizer()
 
         self.decoder = DecoderColorizer((z_dim,), L1, L2)
 
