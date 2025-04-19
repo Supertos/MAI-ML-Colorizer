@@ -3,6 +3,9 @@ from keras import Model, layers, Sequential
 from keras.src.regularizers.regularizers import L1L2 as reg_L1L2
 from keras.src.initializers import GlorotNormal
 from tensorflow import random, exp, shape
+from keras import ops, losses
+from keras.api.metrics import Mean
+from tensorflow import GradientTape
 
 
 """ TODO:
@@ -11,6 +14,9 @@ from tensorflow import random, exp, shape
 
     - + Add training (not trainable) for dropout in call()
     - + make encoder_layer class
+    - + make own loss fun
+    - With a large number of parameters, something strange happens with
+    the loss function. Maybe it's normal????
 """
 
 
@@ -19,7 +25,7 @@ class SamplingColorizer(layers.Layer):
     def call(self, inputs):
         z_mean, z_log_var = inputs
         epsilon = random.normal(shape=shape(z_mean))
-        return z_mean + exp(0.5 * z_log_var) * epsilon
+        return z_mean + exp(0.5 * z_log_var) * epsilon  # tf.exp -> Kereas.exp?
 
 
 class EncoderBlcok(layers.Layer):
@@ -34,7 +40,6 @@ class EncoderBlcok(layers.Layer):
             filters, kernel_size,
             padding='same', strides=2,
             kernel_regularizer=reg_L1L2(l1=L1, l2=L2))
-
         self._batchNorm = layers.BatchNormalization()
         self._leakyReLU = layers.LeakyReLU()
 
@@ -61,54 +66,50 @@ class EncoderColorizer(Model):
         self._l2 = L2
         self._shape = input_shape
 
-        self.enc_1 = EncoderBlcok(128, (3, 3), True)  # 64
-        self.enc_2 = EncoderBlcok(128, (3, 3), True)  # 32
-        self.enc_3 = EncoderBlcok(256, (3, 3), True)  # 16
-        self.enc_4 = EncoderBlcok(512, (3, 3), True)  # 8
-        self.enc_5 = EncoderBlcok(1024, (3, 3), True)  # 4
-        self.enc_6 = EncoderBlcok(2048, (3, 3), True)  # 2
-        self.enc_7 = EncoderBlcok(2048, (3, 3), True)  # 1
+        self.enc_1 = EncoderBlcok(32, (3, 3), True)  # 64
+        self.enc_2 = EncoderBlcok(64, (3, 3), True)  # 32
+        self.enc_3 = EncoderBlcok(128, (3, 3), True)  # 16
+        self.enc_4 = EncoderBlcok(256, (3, 3), True)  # 8
+        self.enc_5 = EncoderBlcok(512, (3, 3), True)  # 4
+        # self.enc_6 = EncoderBlcok(1024, (3, 3), True)  # 2
+        # self.enc_7 = EncoderBlcok(2048, (3, 3), True)  # 1
 
         self.enc_flatten = layers.Flatten()
         self.z_mean = layers.Dense(z_dim, name='z_mean')
         self.z_log_var = layers.Dense(z_dim, name='z_log_var')
 
-    def call(self, inputs, training=False):
-        skip_conncetion = [inputs]
-
-        skip_conncetion.append(self.enc_1(inputs, training=training))
-
-        skip_conncetion.append(
+    def call(self, inputs, training=None):
+        skip_connection = [inputs]
+        skip_connection.append(self.enc_1(inputs, training=training))
+        skip_connection.append(
             self.enc_2(
-                skip_conncetion[-1],
+                skip_connection[-1],
                 training=training))
-
-        skip_conncetion.append(
+        skip_connection.append(
             self.enc_3(
-                skip_conncetion[-1],
+                skip_connection[-1],
                 training=training))
-
-        skip_conncetion.append(
+        skip_connection.append(
             self.enc_4(
-                skip_conncetion[-1],
+                skip_connection[-1],
                 training=training))
-
-        skip_conncetion.append(
-            self.enc_5(
-                skip_conncetion[-1],
-                training=training))
-
-        skip_conncetion.append(
-            self.enc_6(
-                skip_conncetion[-1],
-                training=training))
-
-        x = self.enc_7(skip_conncetion[-1])
+        # skip_connection.append(
+        #     self.enc_5(
+        #         skip_connection[-1],
+        #         training=training))
+        # skip_connection.append(
+        #     self.enc_6(
+        #         skip_connection[-1],
+        #         training=training))
+        # x = self.enc_7(skip_connection[-1])
+        x = self.enc_5(
+                skip_connection[-1],
+                training=training)
 
         flattened = self.enc_flatten(x)
         z_mean = self.z_mean(flattened)
         z_log_var = self.z_log_var(flattened)
-        return z_mean, z_log_var, skip_conncetion
+        return z_mean, z_log_var, skip_connection
 
     def model(self):
         x = layers.Input(shape=(128, 128, 1))
@@ -152,14 +153,14 @@ class DecoderColorizer(Model):
         self._l2 = L2
         self._shape = input_shape
 
-        self.dec_projection = layers.Dense(2048 * 1 * 1)
-        self.dec_reshape = layers.Reshape((1, 1, 2048))
-        self.dec_7 = DecoderBlcok(2048, (3, 3), False)  # 2
-        self.dec_6 = DecoderBlcok(1024, (3, 3), False)  # 4
-        self.dec_5 = DecoderBlcok(512, (3, 3), False)  # 8
-        self.dec_4 = DecoderBlcok(256, (3, 3), False)  # 16
-        self.dec_3 = DecoderBlcok(128, (3, 3), False)  # 32
-        self.dec_2 = DecoderBlcok(128, (3, 3), False)  # 64
+        self.dec_projection = layers.Dense(512 * 4 * 4)
+        self.dec_reshape = layers.Reshape((4, 4, 512))
+        # self.dec_7 = DecoderBlcok(1024, (3, 3), False)  # 2
+        # self.dec_6 = DecoderBlcok(512, (3, 3), False)  # 4
+        self.dec_5 = DecoderBlcok(256, (3, 3), False)  # 8
+        self.dec_4 = DecoderBlcok(128, (3, 3), False)  # 16
+        self.dec_3 = DecoderBlcok(64, (3, 3), False)  # 32
+        self.dec_2 = DecoderBlcok(32, (3, 3), False)  # 64
         self.dec_1 = DecoderBlcok(2, (3, 3), False)  # 128
 
         self.final_conv = layers.Conv2D(
@@ -170,16 +171,17 @@ class DecoderColorizer(Model):
             kernel_initializer=GlorotNormal()
         )
 
-    def call(self, sample, skip_connection: List[Sequential], training=False):
+    def call(self, sample, skip_connection: List[Sequential], training=None):
 
         projection = self.dec_projection(sample)
         reshaped = self.dec_reshape(projection)
 
-        y7 = self.dec_7(reshaped, skip_connection.pop(), training=training)
+        # y7 = self.dec_7(reshaped, skip_connection.pop(), training=training)
 
-        y6 = self.dec_6(y7, skip_connection.pop(), training=training)
+        # y6 = self.dec_6(y7, skip_connection.pop(), training=training)
 
-        y5 = self.dec_5(y6, skip_connection.pop(), training=training)
+        # y5 = self.dec_5(y6, skip_connection.pop(), training=training)
+        y5 = self.dec_5(reshaped, skip_connection.pop(), training=training)
 
         y4 = self.dec_4(y5, skip_connection.pop(), training=training)
 
@@ -213,18 +215,98 @@ class Colorizer(Model):
         self._l2 = L2
         self._shape = input_shape
 
+        self.total_loss_tracker = Mean(name="total_loss")
+        self.reconstruction_loss_tracker = Mean(name="reconstruction_loss")
+        self.kl_loss_tracker = Mean(name="kl_loss")
+
         self.encoder = EncoderColorizer(input_shape, L1, L2, z_dim)
 
         self.sampling = SamplingColorizer()
 
         self.decoder = DecoderColorizer((z_dim,), L1, L2)
 
-    def call(self, inputs, training=False):
+    def call(self, inputs, training=None):
 
         z_mean, z_log_var, skip_conn = self.encoder(inputs, training=training)
         sample = self.sampling([z_mean, z_log_var])
         outputs = self.decoder(sample, skip_conn, training=training)
+
         return outputs
+
+    @property
+    def metrics(self):
+        return [
+            self.total_loss_tracker,
+            self.reconstruction_loss_tracker,
+            self.kl_loss_tracker,
+        ]
+
+    def train_step(self, data):
+        x, y = data
+
+        with GradientTape() as tape:
+
+            z_mean, z_log_var, skip_conn = self.encoder(x, training=True)
+            z = self.sampling([z_mean, z_log_var])
+            reconstruction = self.decoder(z, skip_conn, training=True)
+
+            reconstruction_loss = ops.mean(
+                ops.sum(
+                    losses.mean_squared_error(y, reconstruction),
+                    axis=(1, 2)  # уточнить
+                )
+            )
+
+            kl_loss = -0.5 * ops.mean(
+                ops.sum(
+                    1 + z_log_var - ops.square(z_mean) - ops.exp(z_log_var),
+                    axis=1
+                )
+            )
+
+            total_loss = reconstruction_loss + kl_loss
+
+        grads = tape.gradient(total_loss, self.trainable_weights)
+        self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
+
+        self.total_loss_tracker.update_state(total_loss)
+        self.reconstruction_loss_tracker.update_state(reconstruction_loss)
+        self.kl_loss_tracker.update_state(kl_loss)
+
+        return {
+            "loss": self.total_loss_tracker.result(),
+            "reconstruction_loss": self.reconstruction_loss_tracker.result(),
+            "kl_loss": self.kl_loss_tracker.result(),
+        }
+
+    def test_step(self, data):
+        x, y = data
+
+        z_mean, z_log_var, skip_conn = self.encoder(x, training=False)
+        z = self.sampling([z_mean, z_log_var])
+        reconstruction = self.decoder(z, skip_conn, training=False)
+
+        reconstruction_loss = ops.mean(
+            ops.sum(
+                losses.mean_squared_error(y, reconstruction),
+                axis=(1, 2)))
+        kl_loss = -0.5 * ops.mean(
+            ops.sum(
+                1 + z_log_var - ops.square(z_mean) - ops.exp(z_log_var),
+                axis=1
+            )
+        )
+        total_loss = reconstruction_loss + kl_loss
+
+        self.total_loss_tracker.update_state(total_loss)
+        self.reconstruction_loss_tracker.update_state(reconstruction_loss)
+        self.kl_loss_tracker.update_state(kl_loss)
+
+        return {
+            "loss": self.total_loss_tracker.result(),
+            "reconstruction_loss": self.reconstruction_loss_tracker.result(),
+            "kl_loss": self.kl_loss_tracker.result(),
+        }
 
     def model(self):
         x = layers.Input(shape=self._shape)
