@@ -3,3 +3,4 @@ local_paths.py
 __pycache__
 test*
 logs*
+u_net_and_vae.py
