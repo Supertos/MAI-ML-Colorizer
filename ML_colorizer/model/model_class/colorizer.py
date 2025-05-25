@@ -1,7 +1,6 @@
-from keras.api import layers
+from keras import layers
 import keras
 from typing import Tuple
-
 
 SHAPE_ = (128, 128, 1)
 L1_NORM = 1e-5 * 0.0
