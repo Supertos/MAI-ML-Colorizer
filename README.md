@@ -142,4 +142,3 @@ docker-compose exec backend_fastapi alembic upgrade head
 Frontend сам сохраняет `anonymous_id` в cookie, последующие запросы идут правильно.
 
 ---
-
