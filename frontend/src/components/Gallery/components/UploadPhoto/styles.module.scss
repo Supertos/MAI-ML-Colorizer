@@ -1,0 +1,19 @@
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 286px;
+  height: 224px;
+  margin: 10px;
+  background: #592a4b;
+  border: 2px #ffffff;
+  border-radius: 4px;
+  color: #d0d0d0;
+  font-weight: light;
+  font-size: 16px;
+  margin-bottom: 15px;
+  line-height: 150%;
+  cursor: pointer;
+}

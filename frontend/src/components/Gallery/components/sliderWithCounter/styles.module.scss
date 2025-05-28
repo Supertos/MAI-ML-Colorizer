@@ -1,0 +1,156 @@
+@font-face {
+  font-family: "Droid Sans";
+  src: url("../../src/styles/fonts/DroidSans.ttf");
+}
+
+.sliderGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sliderLabel{
+  height: 0px;
+}
+
+input[type="range"] {
+  width: 290px;
+  appearance: none;
+  background: #592a4b;
+  height: 8px;
+  border-radius: 5px;
+  outline: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  box-shadow: -290px 0 0 290px #a64d79;
+  appearance: none;
+  width: 6px;
+  height: 21px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #3b1c32;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  width: 6px;
+  height: 21px;
+  background: #a64d79;
+  border-radius: 16px;
+  border: 1px solid #3b1c32;
+  cursor: pointer;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+}
+
+.counterInput {
+  color: #ffffff;
+  background-color: #592a4b;
+  width: 30px;
+  height: 25px;
+  border: 1px solid #3b1c32;
+  border-radius: 4px;
+  text-align: center;
+  font-family: "Droid Sans";
+  font-size: 14px;
+  padding: 2px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.counterBtn {
+  color: #d0d0d0;
+  width: 20px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #592a4b;
+  border: 1px solid #3b1c32;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 7px;
+  line-height: 1;
+  padding: 0;
+}
+
+.counterBtn:hover {
+  background: #e0e0e0;
+}
+
+.sliderLabel {
+  font-size: 14px;
+  color: #333;
+  margin-top: 4px;
+}
+
+.description {
+  display: flex;
+  justify-content: flex-start;
+  font-size: 14px;
+}
+/* src/components/Gallery/components/sliderWithCounter/styles.module.scss */
+
+.sliderGroup {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  flex: 1;
+  /* ваши текущие стили */
+}
+
+.counter {
+  margin-left: 0.5rem;
+  /* ваши текущие стили */
+}
+
+.counterInput {
+  /* ваши текущие стили */
+}
+
+.buttons {
+  /* ваши текущие стили */
+}
+
+.counterBtn {
+  /* ваши текущие стили */
+}
+
+/* ===== вернули цвет для текстовых подписей ===== */
+
+.sliderLabel {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #fff;          /* сделали текст белым */
+}
+
+.description {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #ddd;          /* можно чуть светлее, чем основной текст */
+}

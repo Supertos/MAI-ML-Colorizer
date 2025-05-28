@@ -1,0 +1,165 @@
+@font-face {
+  font-family: "Droid Sans";
+  src: url("../../src/styles/fonts/DroidSans.ttf");
+}
+
+@font-face {
+  font-family: "Sansation Light";
+  src: url("../../src/styles/fonts/Sansation-Light.woff");
+}
+
+.title,
+.titleDescription,
+.processButton,
+.titlePhotosContainer {
+  font-family: "Droid Sans";
+}
+
+.titleControls,
+.description,
+.uploadSection {
+  font-family: "Sansation Light";
+}
+
+.galleryContainer {
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+.title {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 100%;
+}
+.titleDescription {
+  margin: auto;
+  width: 529px;
+  height: 136px;
+  font-size: 20px;
+  font-weight: regular;
+  line-height: 100%;
+}
+
+.uploadSection {
+  display: flex;
+  align-items: center;
+  background: #422038;
+  width: 677px;
+  height: 238px;
+  margin: auto;
+  border-radius: 4px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 15px;
+}
+
+.controls {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.titleControls {
+  color: #d0d0d0;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 16;
+  font-weight: 300;
+}
+
+.processButton {
+  background: #a64d79;
+  color: #ffffff;
+  border: none;
+  width: 120px;
+  height: 25px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  margin: auto;
+}
+.titlePhotosContainer {
+  margin-bottom: 18px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 100%;
+}
+
+.photosContainer {
+  display: flex;
+  gap: 26px;
+  justify-content: flex-start;
+  margin-top: 20px;
+  padding: 10px 65px 10px 65px;
+  width: 670px;
+  height: 180px;
+  background-color: #422038;
+  margin: auto;
+  border-radius: 4px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: auto;
+  scrollbar-color: #a64d79 #592a4b;
+}
+
+
+/* src/components/Gallery/components/sliderWithCounter/styles.module.scss */
+
+.sliderGroup {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  flex: 1;
+  /* ваши текущие стили */
+}
+
+.counter {
+  margin-left: 0.5rem;
+  /* ваши текущие стили */
+}
+
+.counterInput {
+  /* ваши текущие стили */
+}
+
+.buttons {
+  /* ваши текущие стили */
+}
+
+.counterBtn {
+  /* ваши текущие стили */
+}
+
+/* ===== вернули цвет для текстовых подписей ===== */
+
+.sliderLabel {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #fff;          /* сделали текст белым */
+}
+
+.description {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #ddd;          /* можно чуть светлее, чем основной текст */
+}
