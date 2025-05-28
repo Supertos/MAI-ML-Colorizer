@@ -1,0 +1,81 @@
+@font-face {
+  font-family: "Droid Sans";
+  src: url("../../src/styles/fonts/DroidSans.ttf");
+}
+
+.title,
+.titleDescription {
+  font-family: "Droid Sans";
+}
+
+.resultContainer {
+  margin: 0 auto;
+  background-color: #422038;
+  width: 1251px;
+  height: 381px;
+}
+.title {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 100%;
+}
+.titleDescription {
+  margin: 0 auto;
+  width: 529px;
+  height: 136px;
+  font-size: 20px;
+  font-weight: regular;
+  line-height: 100%;
+}
+.container {
+  text-align: center;
+  padding: 20px;
+  color: #ffffff;
+}
+
+.downloadAllButton {
+  width: 500px;
+  height: 49px;
+  background: #a64d79;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 150%;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 45px;
+  margin-bottom: 260px;
+
+  &:hover {
+    background: darken(#a64d79, 10%);
+  }
+
+  &:active {
+    background: darken(#a64d79, 15%);
+  }
+}
+
+.photosContainer {
+  padding: 10px 81px;
+  display: flex;
+  gap: 19px;
+  justify-content: space-between;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: auto;
+  scrollbar-color: #a64d79 #592a4b;
+}

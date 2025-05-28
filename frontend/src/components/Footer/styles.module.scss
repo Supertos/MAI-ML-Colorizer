@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Droid Sans';
+  src: url('../../src/styles/fonts/DroidSans.ttf');
+}
+
+
+.footer {
+  font-family: 'Droid Sans';
+  font-size: 20px;
+  background-color: #1a1a1d;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.company {
+  color: #d0d0d0;
+  margin-left: 80px;
+}
+.email > a {
+  color: #d0d0d0;
+  margin-right: 80px;
+}
