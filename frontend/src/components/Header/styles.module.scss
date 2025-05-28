@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Konkhmer+Sleokchher&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
+
+.header {
+  background-color: #1a1a1d;
+  height: 84px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  margin-left: 80px;
+  width: 272px;
+}
+.headerTitle {
+  font-size: 56px;
+  font-family: "Konkhmer Sleokchher", system-ui;
+  font-weight: 400;
+  color: #d0d0d0;
+  position: relative;
+  top: 5px;
+}
+.headerSubtitle {
+  font-size: 20px;
+  font-family: "Caveat", cursive;
+  font-weight: 400;
+  color: #ffffff;
+  position: relative;
+  left: 120px;
+  top: -24px;
+}
+.themeSwitch {
+  margin-right: 80px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
